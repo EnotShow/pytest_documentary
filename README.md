@@ -8,10 +8,8 @@ Usage:
 <b>pytest.ini</b>
 ```
 [pytest]
-# Enable or disable the plugin by default
-documentary-enabled = true  # Change to true to enable by default
 # Default output file name
 documentary-output-file = documentary_output.xlsx
 # Default output path
-documentary-output-path = ./some_folder/
+documentary-output-path = ./
 ```

@@ -1,3 +1,5 @@
+import os
+
 import pytest
 import pandas as pd
 
@@ -9,29 +11,47 @@ def pytest_addoption(parser):
         default=False,
         help="Generate test documentation"
     )
+    # parser.addini(
+    #     "documentary-enabled",
+    #     type="bool",
+    #     default="false",
+    #     help="Generate test documentation"
+    # )
     parser.addoption(
         "--documentary-output-file",
         action="store",
+        default=None,
+        help="Output file for test documentation"
+    )
+    parser.addini(
+        "documentary-output-file",
+        type="string",
         default="documentary_output.xlsx",
         help="Output file for test documentation"
     )
     parser.addoption(
         "--documentary-output-path",
         action="store",
-        default="./",
+        default=None,
+        help="Output path for test documentation"
+    )
+    parser.addini(
+        "documentary-output-path",
+        type="string",
+        default='./',
         help="Output path for test documentation"
     )
 
 
 def pytest_configure(config):
     enabled = config.getoption("--pytest-documentary")
-    if enabled is None:
-        enabled = config.getini("documentary_enabled") == "true"
+    # if enabled is None:
+    #     enabled = config.getini("documentary-enabled") == True
     config._generate_documentation = enabled
 
     output_file = config.getoption("--documentary-output-file")
     if output_file is None:
-        output_file = config.getini("documentary_output_file")
+        output_file = config.getini("documentary-output-file")
     config._documentary_output_file = output_file
 
     output_path = config.getoption("--documentary-output-path")
@@ -64,6 +84,8 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
         output = output_path.rstrip("/") + "/" + output_file
 
         df = pd.DataFrame(collected_data)
+        if not os.path.exists(output_path):
+            os.makedirs(output_path)
         df.to_excel(output, index=False)
 
         terminalreporter.write_sep("=", f"Test documentation generated at {output}")
