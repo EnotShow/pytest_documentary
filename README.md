@@ -5,6 +5,19 @@
 
 Usage:
 
+```
+pip install pytest-documentary
+```
+Run the pytest with --pytest-documentary flag
+```
+pytest --pytest-documentary
+```
+
+You can use additional flags:
+```
+pytest --pytest-documentary --documentary-output-file documentary_output.xls --documentary-output-path ./results/
+```
+
 <b>pytest.ini</b>
 ```
 [pytest]
