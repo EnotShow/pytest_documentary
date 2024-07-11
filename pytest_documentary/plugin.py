@@ -11,12 +11,12 @@ def pytest_addoption(parser):
         default=False,
         help="Generate test documentation"
     )
-    # parser.addini(
-    #     "documentary-enabled",
-    #     type="bool",
-    #     default="false",
-    #     help="Generate test documentation"
-    # )
+    parser.addini(
+        "documentary-enabled",
+        type="bool",
+        default=None,
+        help="Generate test documentation"
+    )
     parser.addoption(
         "--documentary-output-file",
         action="store",
@@ -44,9 +44,9 @@ def pytest_addoption(parser):
 
 
 def pytest_configure(config):
-    enabled = config.getoption("--pytest-documentary")
-    # if enabled is None:
-    #     enabled = config.getini("documentary-enabled") == True
+    enabled = config.getini("documentary-enabled")
+    if enabled is None:
+        enabled = config.getoption("--pytest-documentary")
     config._generate_documentation = enabled
 
     output_file = config.getoption("--documentary-output-file")
@@ -61,6 +61,7 @@ def pytest_configure(config):
 
 
 def pytest_collection_modifyitems(config, items):
+    print(not config._generate_documentation)
     if not config._generate_documentation:
         return
     config._pytest_documentary_collected_data = []
